@@ -1,0 +1,4 @@
+baostock
+numpy
+pandas
+pytdx
