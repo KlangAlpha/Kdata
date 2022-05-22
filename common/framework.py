@@ -38,7 +38,7 @@ class API():
         
         return requests.post(url,params={'factorname':factorname},json=json)
 
-    def post_factorb(self,facotname,json):
+    def post_factorb(self,factorname,json):
         url = self.host + "/postfactors"
         return requests.post(url,params={'factorname':factorname},json=json)
 

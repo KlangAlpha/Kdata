@@ -229,7 +229,10 @@ if __name__ == "__main__":
         print(i['code'],i['name'],bk,gn)
         factor1.append({'code':i['code'],"value":bk})
         factor2.append({'code':i['code'],"value":gn})
-    
+
+    # 创建不定期更新因子
+    # 提交A类因子 
+
     kapi.create_factor("tdxbk",0,"通达信板块")
     kapi.post_factora("tdxbk",factor1)
     kapi.create_factor("tdxgn",0,"通达信概念")
