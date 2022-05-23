@@ -87,6 +87,15 @@ class API():
                 result.append(i)
             codelist.append(i['code'])
         return result
-
+    def create_strategy(self,title,content,description,status,lang):
+        url = self.host + "/strategies"
+        return requests.post(url,json={"title":title,
+            'content':content,
+            'description':description,
+            'status':status,
+            'lang':lang})
+    def get_strategy(self,params):
+        url = self.host + "/strategies"
+        return requests.get(url,params)
 
 
