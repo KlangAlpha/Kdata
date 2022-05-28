@@ -33,11 +33,13 @@ class API():
         url = self.host + "/factormanages"
         session.post(url,params={"factorname":factorname,"describe":describe,"freq":freq})
 
-    def post_factora(self,factorname,json):
+    def post_factora(self,factorname,json,date=None):
         url = self.host + "/postfactors"
-        
-        return session.post(url,params={'factorname':factorname},json=json)
-
+        if date is None:
+            return session.post(url,params={'factorname':factorname},json=json)
+        else:
+            return session.post(url,params={'factorname':factorname,"date":date},json=json)
+            
     def post_factorb(self,factorname,json):
         url = self.host + "/postfactors"
         return session.post(url,params={'factorname':factorname},json=json)
