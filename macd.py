@@ -29,15 +29,14 @@ def getstockinfo(default=0):
 from common.common import get_date
 from common.framework import API
 
-start = get_date(120) #获取120天之前的日期,约80交易日
-end   = get_date(3)  # 获取今天的日期
+start = get_date(160) #获取120天之前的日期,约80交易日
+end   = get_date(0)  # 获取今天的日期
 
 result = []
 
 #Klang 执行的结果回调
 def callback(rdiff,rdea,rmacd):
     name,code = getstockinfo(0)
-
     
     for i in range(20):
         print(code,rdiff[i],rdea[i],rmacd[i],DATETIME[i])

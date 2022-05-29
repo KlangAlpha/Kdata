@@ -33,3 +33,5 @@ for stock in stocklist:
 
 
 任何问题请访问 https://forum.klang.org.cn 提问
+更多文档 https://www.klang.org.cn/docs/Kdata/
+

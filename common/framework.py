@@ -39,14 +39,17 @@ class API():
             return session.post(url,params={'factorname':factorname},json=json)
         else:
             return session.post(url,params={'factorname':factorname,"date":date},json=json)
-            
+
     def post_factorb(self,factorname,json):
         url = self.host + "/postfactors"
         return session.post(url,params={'factorname':factorname},json=json)
 
-    def get_factor(self,factorname,date=endday):
+    def get_factor(self,factorname,date=endday,code='sh.600000',limit=100):
         url = self.host + "/getfactors"
-        return session.get(url,params={'factorname':factorname,'date':date})
+        return session.get(url,params={'factorname':factorname,
+            "code":code,
+            "limit":limit,
+            'date':date})
 
     def create_group(self,name,description):
         url = self.host + "/groupmanagers"
