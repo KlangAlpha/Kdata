@@ -2,3 +2,4 @@ baostock
 numpy
 pandas
 pytdx
+polars
