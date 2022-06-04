@@ -72,8 +72,8 @@ def contains(s,key):
 df1 = df1.filter(
     pl.col("value").apply(lambda s: contains(s,"光伏"))
 )
-
 print(df1)
+codelist = df1['code'].to_list()
 
 
 #
@@ -81,12 +81,10 @@ print(df1)
 #
 #
 
-stock =  stocklist[100]
-code = stock['code']
+code  =  codelist[0]
 
-data = kapi.get_factor('macd',date=end,code=code,limit=200).json()
 
-df_macd = pl.DataFrame(data)
+
 
 def buy(s):
     result = s.split(",")
@@ -101,21 +99,17 @@ def sell(s):
     else:
         return 0
 
-df_macd = df_macd.with_columns([
-    pl.col("macd").apply(lambda s: buy(s)).alias('buy'),
-    pl.col("macd").apply(lambda s: sell(s)).alias('sell')
-])
+def codetodf(code):
+    data = kapi.get_factor('macd',date=end,code=code,limit=200).json()
 
+    df_macd = pl.DataFrame(data)
+    df_macd = df_macd.with_columns([
+        pl.col("macd").apply(lambda s: buy(s)).alias('buy'),
+        pl.col("macd").apply(lambda s: sell(s)).alias('sell')
+    ])
+    return df_macd
 
-df_b = df_macd.filter(
-    pl.col("buy") == 1
-)
-df_s = df_macd.filter(
-    pl.col("sell") == 1
-)
-print(df_b)
-print(df_s)
-
+df_macd = None
 
 def buy_condition(dt):
     return df_macd[df_macd['date'] == dt].buy[0] == 1
@@ -128,10 +122,17 @@ def sell_condition(dt):
 import btr
 from Klang import Kl,Klang
 Klang.Klang_init(); #加载所有股票列表
-     
-Kl.code("sh.600126")
-df = Kl.currentdf['df'] 
 
-btr.set_buy_sell(buy_condition,sell_condition)
-btr.init_btr(df)
+
+for code in codelist:
+
+    Kl.code(code)
+    
+    print(code,getname(code))
+
+    df = Kl.currentdf['df'] 
+    df_macd = codetodf(code)
+
+    btr.set_buy_sell(buy_condition,sell_condition)
+    btr.init_btr(df)
 
