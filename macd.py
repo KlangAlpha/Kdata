@@ -28,20 +28,10 @@ def getstockinfo(default=0):
 
 from common.common import get_date
 from common.framework import API
+kapi = API()
 
-start = get_date(160) #获取120天之前的日期,约80交易日
-end   = get_date(0)  # 获取今天的日期
-
-result = []
-
-#Klang 执行的结果回调
-def callback(rdiff,rdea,rmacd):
-    name,code = getstockinfo(0)
-    
-    for i in range(20):
-        print(code,rdiff[i],rdea[i],rmacd[i],DATETIME[i])
-        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])    
-        result.append({"code":code,"macd":macd,"date":str(DATETIME[i])})
+# 系统会检查因子，不会重复创建
+kapi.create_factor("macd",1,"标准macd指标")
 
 macdcode=\
 """
@@ -54,14 +44,57 @@ callback(rdiff,rdea,rmacd)
 endp
 """
 
+result = []
+
+##########################################################################
+#
+# 第一次执行
+# 第一次执行数据较多，所以提交因子是按照每只股票提交一次
+#
+##########################################################################
+
+start = '2021-08-03' # 获取200天之前的日期,约200个交易日
+end   = get_date(0)  # 获取今天的日期
+
+#Klang 执行的结果回调
+def callback(rdiff,rdea,rmacd):
+    global result 
+    name,code = getstockinfo(0)
+    result = []
+    for i in range(len(rdiff)):
+        
+        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])    
+        result.append({"code":code,"macd":macd,"date":str(DATETIME[i])})
+    print(code,name)
+    # 每只股票提交一次
+    kapi.post_factorb("macd",result)
 
 Kexec(macdcode)
 
-kapi = API()
+#############################################################################
+# 日常更新
+# 日常更新只更新 最后几天的数据
+# 数据较少，所以采取一次性提交
+##############################################################################
 
-# 系统会检查因子，不会重复创建
-kapi.create_factor("macd",1,"标准macd指标")
+start = get_date(90) #获取90天之前的日期,约60交易日
+end   = get_date(0)  # 获取今天的日期
+
+#Klang 执行的结果回调
+def callback(rdiff,rdea,rmacd):
+    name,code = getstockinfo(0)
+
+    for i in range(10):       
+        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])    
+        result.append({"code":code,"macd":macd,"date":str(DATETIME[i])})
+
+Kexec(macdcode)
 # 提交B类 日更数据
 kapi.post_factorb("macd",result)
+
+#####################################################
+
 print("macd 因子已经提交完成")
+
+
 
