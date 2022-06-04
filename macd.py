@@ -35,16 +35,20 @@ kapi.create_factor("macd",1,"标准macd指标")
 
 macdcode=\
 """
-
 kloop
 
 Kl.date(start,end)
 rdiff,rdea,rmacd = MACD(C)
-callback(rdiff,rdea,rmacd)
+buy = CROSS(rdiff,rdea)
+sell = CROSS(rdea,rdiff)
+callback(rdiff,rdea,rmacd,buy,sell)
+
 endp
 """
 
 result = []
+
+first = 0 #第一次设置 first = 1，以后升级数据，设置first = 0
 
 ##########################################################################
 #
@@ -53,23 +57,26 @@ result = []
 #
 ##########################################################################
 
+
 start = '2021-08-03' # 获取200天之前的日期,约200个交易日
 end   = get_date(0)  # 获取今天的日期
 
 #Klang 执行的结果回调
-def callback(rdiff,rdea,rmacd):
+def callback(rdiff,rdea,rmacd,buy,sell):
     global result 
     name,code = getstockinfo(0)
     result = []
-    for i in range(len(rdiff)):
-        
-        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])    
+
+    for i in range(len(rdiff)):        
+        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])+","+str(buy[i])+","+str(sell[i])   
         result.append({"code":code,"macd":macd,"date":str(DATETIME[i])})
     print(code,name)
     # 每只股票提交一次
     kapi.post_factorb("macd",result)
 
-Kexec(macdcode)
+if first:
+    Kexec(macdcode)
+
 
 #############################################################################
 # 日常更新
@@ -81,16 +88,17 @@ start = get_date(90) #获取90天之前的日期,约60交易日
 end   = get_date(0)  # 获取今天的日期
 
 #Klang 执行的结果回调
-def callback(rdiff,rdea,rmacd):
+def callback(rdiff,rdea,rmacd,buy,sell):
     name,code = getstockinfo(0)
-
+    print(name,code)
     for i in range(10):       
-        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])    
+        macd = str(rdiff[i])+","+str(rdea[i])+","+str(rmacd[i])+","+str(buy[i])+","+str(sell[i])    
         result.append({"code":code,"macd":macd,"date":str(DATETIME[i])})
 
-Kexec(macdcode)
-# 提交B类 日更数据
-kapi.post_factorb("macd",result)
+if first == 0:
+    Kexec(macdcode)
+    # 提交B类 日更数据
+    kapi.post_factorb("macd",result)
 
 #####################################################
 
