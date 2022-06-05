@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 
 hostname = "http://127.0.0.1:1337/api"
-#hostname = "https://data.klang.org.cn/api"
+hostname = "https://data.klang.org.cn/api"
 
 
 parser = argparse.ArgumentParser()

@@ -61,7 +61,7 @@ class KStrategy(bt.Strategy):
         self.dataclose = self.datas[0].close
         self.order = None
         self.macdhist = bt.ind.MACDHisto(self.data)
-        print(self.data)
+        
     def notify_order(self, order):
         if order.status == order.Completed:
             pass
@@ -134,7 +134,7 @@ def init_btr(df):
 
     print('总剩余: %.2f' % cerebro.broker.getvalue())
     # Plot the result
-    cerebro.plot(style='bar')   
+    # cerebro.plot(style='bar')   
 
 def set_buy_sell(buy,sell):
     global buy_condition,sell_condition
