@@ -63,6 +63,8 @@ df1 = df1.select([
     'date'
 ])
 
+# 可以自定义函数，也可以使用系统自带的函数
+"""
 def contains(s,key):  
     if key in s:
         return True
@@ -72,6 +74,11 @@ def contains(s,key):
 df1 = df1.filter(
     pl.col("value").apply(lambda s: contains(s,"光伏"))
 )
+"""
+df1 = df1.filter(
+    pl.col("value").str.contains('光伏')
+)
+
 print(df1)
 codelist = df1['code'].to_list()
 
@@ -82,9 +89,6 @@ codelist = df1['code'].to_list()
 #
 
 code  =  codelist[0]
-
-
-
 
 def buy(s):
     result = s.split(",")

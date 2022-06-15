@@ -24,13 +24,11 @@ now = int(time.time())
 now = now - 30 * 24 * 3600 #往前30天
 timeArray = time.localtime(now)
 start_date = time.strftime("%Y-%m-%d", timeArray)
-print(start_date)
 
 while (rs.error_code == '0') & rs.next() :
     # 获取一条记录，将记录合并在一起
     row = rs.get_row_data()
     kdata = bs.query_history_k_data_plus(row[1], 'date,open,high,low,close,volume', start_date=start_date, 
-                               
                                       frequency='d')	
     
     if len(kdata.get_data()) <= 10:
