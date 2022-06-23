@@ -17,11 +17,12 @@ UNDERLINE = '\033[4m'
 session = requests.Session()
 
 class API():
-    def __init__(self,host=hostname):
+    def __init__(self,host=hostname,hostget=hostnameget):
         self.host = host
+        self.hostget = hostget
 
     def get_stocklist(self):
-        url = self.host + "/stocklists"
+        url = self.hostget + "/stocklists"
         return session.get(url)
 
     def post_stocklist(self,json):
@@ -45,7 +46,7 @@ class API():
         return session.post(url,params={'factorname':factorname},json=json)
 
     def get_factor(self,factorname,date=endday,code='sh.600000',limit=100):
-        url = self.host + "/getfactors"
+        url = self.hostget + "/getfactors"
         return session.get(url,params={'factorname':factorname,
             "code":code,
             "limit":limit,
@@ -80,7 +81,7 @@ class API():
             "date":date})
 
     def codes_fromgroup(self,name,start,end):
-        url = self.host + "/grouplists"
+        url = self.hostget + "/grouplists"
         resp = session.get(url,params={"name":name,"start":start,"end":end})
         if resp.status_code != 200:
             return resp
@@ -102,7 +103,7 @@ class API():
             'lang':lang})
 
     def get_strategy(self,params):
-        url = self.host + "/strategies"
+        url = self.hostget + "/strategies"
         return session.get(url,params)
 
 

@@ -1,10 +1,23 @@
 import argparse
 import time
 from datetime import datetime
+import requests
 
 hostname = "http://127.0.0.1:1337/api"
 hostname = "https://data.klang.org.cn/api"
 
+def gethostname():
+   
+    serveriplist = []
+    url = 'https://www.klang.org.cn/api/sysconfigs?keyword=data&filter=1'
+    resp = requests.get(url).json()
+    for i in resp:
+        if i['key'] == 'dataserver':
+            serveriplist = i['value'].split(',')
+    host = "http://" + serveriplist[0] + "/api"
+    return host
+    
+hostnameget = gethostname()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--offset", help="开始执行的位置",default='0')
