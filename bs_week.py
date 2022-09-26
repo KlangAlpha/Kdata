@@ -15,7 +15,7 @@ session = ""
 
 
 def get_bar(name,code):
-    bdata = bs.query_history_k_data_plus(code,'date,open,high,low,close,volume,amount,turn,code', start_date=start_d,frequency='d',adjustflag="2")
+    bdata = bs.query_history_k_data_plus(code,'date,open,high,low,close,volume,amount,turn,code', start_date=start_d,frequency='w',adjustflag="2")
     datas = bdata.get_data()
     print(name,code,end=" ")
     print(len(datas),datas.iloc[-1].date)
@@ -29,10 +29,10 @@ def get_bar(name,code):
     #print(datas.iloc[-1],liutonggu,d)
 
     try:
-        resp = session.post(kapi.host+"/dayks/updates",json=jsondatas,timeout=2000)
+        resp = session.post(kapi.host+"/weeks/updates",json=jsondatas,timeout=2000)
     except:
         time.sleep(2)
-        session.post(kapi.host+"/dayks/updates",json=jsondatas,timeout=2000)
+        session.post(kapi.host+"/weeks/updates",json=jsondatas,timeout=2000)
 
 
 if True:
