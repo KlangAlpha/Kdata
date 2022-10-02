@@ -9,7 +9,7 @@ import baostock as bs
 
 bs.login()
 
-start_d = get_date(15)
+start_d = get_date(365*2)
 
 session = ""
 
