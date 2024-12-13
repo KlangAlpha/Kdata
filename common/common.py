@@ -14,7 +14,7 @@ def gethostname():
     for i in resp:
         if i['key'] == 'dataserver':
             serveriplist = i['value'].split(',')
-    host = "http://" + serveriplist[0] + "/api"
+    host = serveriplist[0] + "/api"
     return host
     
 hostnameget = gethostname()
@@ -50,3 +50,25 @@ def get_date(day):
     now = now - day * 24 * 3600 #往前N天
     timeArray = time.localtime(now)
     return time.strftime("%Y-%m-%d", timeArray)
+
+
+import signal
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    raise TimeoutException
+
+def with_timeout(timeout):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(timeout)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)  # 关闭闹钟
+            return result
+        return wrapper
+    return decorator
